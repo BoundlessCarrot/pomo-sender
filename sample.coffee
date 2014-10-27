@@ -1,5 +1,7 @@
 {MongoClient} = require 'mongodb'
 Sender = require './index'
+path = require 'path'
+fs = require 'fs'
 _ = require 'underscore'
 
 mailer = require('pomo-mailer')

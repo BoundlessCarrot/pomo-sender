@@ -42,12 +42,12 @@ module.exports = class Sender
 
   is_running: false
 
-  constructor: (options) =>
+  constructor: (options) ->
     @options = _.extend _.clone(@default_options), options
-    @mailQueue = options.mongo.collection @options.queue_collection
-    @mailLog = options.mongo.cillection @options.log_collection
-    @logger = options.logger
-    @mailer = options.mailer
+    @mailQueue = @options.mongo.collection @options.queue_collection
+    @mailLog = @options.mongo.collection @options.log_collection
+    @logger = @options.logger
+    @mailer = @options.mailer
 
   getTimezones: (callback) =>
     @mailQueue.aggregate [
@@ -58,10 +58,10 @@ module.exports = class Sender
         _id: '$timezone'
     ], (err, timezones) ->
       @logger.error err if err
-      callback _.pluck timezones, 'timezone'
+      callback _.pluck timezones, '_id'
 
   getAvailableTimezones: (timezones) =>
-    return _.filter timezones, (timezone) ->
+    return _.filter timezones, (timezone) =>
       local_hour = moment().tz(timezone).hour()
       return @options.local_time_end > local_hour >= @options.local_time_start
 
@@ -83,7 +83,7 @@ module.exports = class Sender
     , ->
 
   runMailQuere: (callback) =>
-    getTimezones (timezones) =>
+    @getTimezones (timezones) =>
       available_timezone = @getAvailableTimezones timezones
 
       if _.isEmpty available_timezone
@@ -108,7 +108,7 @@ module.exports = class Sender
           setImmediate callback
 
   sendMail: (email, callback) =>
-    mailer.sendMail @options.category, email.email, email.view_data,
+    @mailer.sendMail @options.category, email.email, email.view_data,
       language: email.language
       timezone: email.timezone
     , (err, info) =>
