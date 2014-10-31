@@ -7,6 +7,7 @@ mailQueue_sample =
   timezone: 'Asia/Shanghai'
   email: 'jysperm@gmail.com'
   language: 'zh_CN'
+  options: {}
   view_data: {}
 
 module.exports = class Sender
@@ -108,10 +109,11 @@ module.exports = class Sender
           setImmediate callback
 
   sendMail: (email, callback) =>
-    @mailer.sendMail @options.category, email.email, email.view_data,
+    options = _.extend (email.options ? {}),
       language: email.language
       timezone: email.timezone
-    , (err, info) =>
+
+    @mailer.sendMail @options.category, email.email, email.view_data, options, (err, info) =>
       if err
         @logger.error err
         return callback()
