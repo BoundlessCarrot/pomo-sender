@@ -120,9 +120,10 @@ module.exports = class Sender
 
       @logger.log "[sendMail] #{email.email} (#{email.language} @ #{email.timezone})"
 
-      @mailLog.insert _.extend email
+      _.extend email,
         info: info
-      , ->
+
+      @mailLog.insert email, =>
         @mailQueue.remove
           _id: email._id
         , ->
