@@ -57,7 +57,7 @@ module.exports = class Sender
     ,
       $group:
         _id: '$timezone'
-    ], (err, timezones) ->
+    ], (err, timezones) =>
       @logger.error err if err
       callback _.pluck timezones, '_id'
 
@@ -127,4 +127,4 @@ module.exports = class Sender
         @mailQueue.remove
           _id: email._id
         , ->
-          callback
+          callback()
