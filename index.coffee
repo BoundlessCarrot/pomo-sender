@@ -122,6 +122,7 @@ module.exports = class Sender
 
       _.extend email,
         info: info
+        created_at: new Date()
 
       @mailLog.insert email, =>
         @mailQueue.remove
