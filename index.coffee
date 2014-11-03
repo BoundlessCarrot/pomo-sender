@@ -70,18 +70,17 @@ module.exports = class Sender
     @is_running = false
 
   startRunMailQueue: =>
-    if @is_running
-      return
-
     @is_running = true
 
-    async.forever (callback) =>
-      unless @is_running
-        @logger.log '[startRunMailQueue] stop run mail queue'
-        return callback true
+    do _.once =>
+      async.forever (callback) =>
+        unless @is_running
+          @logger.log '[startRunMailQueue] stop run mail queue'
+          return callback true
 
-      @runMailQuere callback
-    , ->
+        @runMailQuere ->
+          setImmediate callback
+      , ->
 
   runMailQuere: (callback) =>
     @getTimezones (timezones) =>
@@ -105,8 +104,7 @@ module.exports = class Sender
 
         async.eachLimit emails, @options.threads, (email, callback) =>
           @sendMail email, callback
-        , ->
-          setImmediate callback
+        , callback
 
   sendMail: (email, callback) =>
     options = _.extend (email.options ? {}),
