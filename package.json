@@ -1,6 +1,6 @@
 {
   "name": "pomo-sender",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple spamming framework based on pomo-mailer.",
   "homepage": "https://github.com/hackplan/pomo-sender",
   "license": "MIT",
